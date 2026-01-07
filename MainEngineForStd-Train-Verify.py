@@ -13,7 +13,7 @@ def run_ai_pipeline():
         if not os.path.exists('keystroke_data.json'):
             messagebox.showerror("Error", "No keystroke_data.json กรุณารันเเละทำ SelfTrainDataApplication please Sir!")
             return
-
+        
         with open('keystroke_data.json', 'r', encoding='utf-8') as f:
             df = pd.DataFrame(json.load(f))
 
