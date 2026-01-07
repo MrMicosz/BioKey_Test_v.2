@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+build/
+dist/
+*.spec
+
+keystroke_data.json
+*.pkl
+
+.DS_Store
+Thumbs.db
