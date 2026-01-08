@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioKey Project Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --secondary-color: #9C27B0;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --code-bg: #282c34;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .section {
+            background: var(--white);
+            margin-bottom: 30px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+        }
+
+        h2 {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .theory-box {
+            background-color: #e3f2fd;
+            border-left: 5px solid var(--primary-color);
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .code-label {
+            display: inline-block;
+            background: #444;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 4px 4px 0 0;
+            font-size: 12px;
+            margin-bottom: -1px;
+        }
+
+        .module-badge {
+            background: var(--secondary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            vertical-align: middle;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>BioKey: สถาปัตยกรรมชีวมิติเชิงพฤติกรรม</h1>
+    <p>ระบบยืนยันตัวตนต่อเนื่องด้วยพลวัตการกดแป้นพิมพ์ (Keystroke Dynamics)</p>
+</header>
+
+<div class="container">
+
+    <div class="section">
+        <h2>1. รากฐานทางทฤษฎี (Theoretical Foundations)</h2>
+        <p>โครงการ BioKey มุ่งเน้นการตรวจสอบ "สิ่งที่ผู้ใช้เป็น" (Something you are) ผ่านจังหวะการพิมพ์ ซึ่งเป็นเอกลักษณ์เฉพาะบุคคลที่เกิดจากความจำของกล้ามเนื้อ (Muscle Memory) ในสมองส่วนซีรีเบลลัม [cite: 6, 14]</p>
+        
+        <div class="theory-box">
+            <strong>หัวใจสำคัญ:</strong> พฤติกรรมการพิมพ์มีความแปรปรวนระดับไมโคร (Micro-variations) ที่ยากต่อการลอกเลียนแบบ แม้ผู้บุกรุกจะรู้รหัสผ่าน แต่จังหวะการเคลื่อนไหวนิ้วจะแตกต่างกันอย่างสิ้นเชิง [cite: 15]
+        </div>
+
+        <table>
+            <tr>
+                <th>คุณลักษณะ (Feature)</th>
+                <th>คำอธิบายทางคณิตศาสตร์</th>
+            </tr>
+            <tr>
+                <td>Dwell Time (DT)</td>
+                <td>ระยะเวลาที่ปุ่มถูกกดค้างไว้ ($DT_i = R_i - P_i$) [cite: 36, 38]</td>
+            </tr>
+            <tr>
+                <td>Flight Time (FT)</td>
+                <td>เวลาเดินทางระหว่างปุ่ม ($FT_{i,i+1} = P_{i+1} - R_i$) [cite: 40, 42]</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>2. โมดูลรวบรวมข้อมูล <span class="module-badge">Data Collector</span></h2>
+        <h3>ไฟล์: <code>SelfTrainDataApplication.py</code></h3>
+        <p>ทำหน้าที่ดักจับเหตุการณ์ KeyDown (P) และ KeyUp (R) ในระดับ Application Layer เพื่อคำนวณเวลาในหน่วยมิลลิวินาที [cite: 25, 26]</p>
+
+        <div class="code-label">ส่วนการดักจับและคำนวณเวลา</div>
+        <pre>
+# ดักจับจังหวะการปล่อยปุ่มเพื่อหาค่า Dwell และ Flight Time
+def on_release(self, event):
+    release_time = time.perf_counter() * 1000
+    press_time = self.key_press_times.get(event.keysym)
+
+    if press_time:
+        dwell_time = release_time - press_time
+        # คำนวณ Flight Time จาก Release ก่อนหน้า ถึง Press ปัจจุบัน
+        flight_time = (press_time - self.last_release_time) if self.last_release_time > 0 else 0
+        
+        self.logs.append({
+            "key": event.keysym,
+            "dwellTime": round(dwell_time, 2),
+            "flightTime": round(flight_time, 2)
+        })
+        self.last_release_time = release_time</pre>
+        
+        <p><strong>ความปลอดภัย:</strong> ระบบส่งเฉพาะข้อมูลเวลา (Timing Data) ไม่ส่งเนื้อหาข้อความ เพื่อป้องกัน Keylogging [cite: 28]</p>
+    </div>
+
+    <div class="section">
+        <h2>3. ส่วนประมวลผลอัจฉริยะ <span class="module-badge">Brain Processor</span></h2>
+        <h3>ไฟล์: <code>MainEngineForStd-Train-Verify.py</code></h3>
+        <p>ทำหน้าที่เตรียมข้อมูล (Preprocessing) และฝึกโมเดล One-Class SVM เพื่อสร้าง "ขอบเขตความปกติ" ของผู้ใช้งาน [cite: 32, 54]</p>
+
+        <div class="code-label">การทำ Data Cleaning และ Scaling</div>
+        <pre>
+# กรองข้อมูลที่เกิน 2000ms เพราะถือว่าเป็นการหยุดพัก (Cognitive Pause) [cite: 46]
+df = df[df['flightTime'] < 2000]
+
+# ทำ Z-score Standardization เพื่อให้ค่า DT และ FT อยู่ในมาตราส่วนเดียวกัน [cite: 47]
+scaler = StandardScaler()
+features_scaled = scaler.fit_transform(df[['dwellTime', 'flightTime']])</pre>
+
+        <div class="code-label">การฝึกสอน AI (One-Class SVM)</div>
+        <pre>
+# ใช้ RBF Kernel เพื่อรองรับข้อมูลที่ซับซ้อนและไม่เป็นเส้นตรง [cite: 73]
+# พารามิเตอร์ nu=0.1 คือยอมให้มี Outliers ในชุดฝึกได้ 10% เพื่อความยืดหยุ่น [cite: 86]
+model = OneClassSVM(kernel='rbf', gamma='auto', nu=0.1)
+model.fit(features_scaled)</pre>
+    </div>
+
+    <div class="section">
+        <h2>4. ส่วนตรวจสอบสิทธิ์ <span class="module-badge">Verifier</span></h2>
+        <h3>ไฟล์: <code>Verify.py</code></h3>
+        <p>ทำงานแบบ Real-time โดยตัดสินใจผ่านฟังก์ชันการตัดสินใจ (Decision Function) ว่าข้อมูลชุดใหม่เป็น "Inlier" (เจ้าของ) หรือ "Outlier" (ผู้บุกรุก) [cite: 50, 81]</p>
+
+        <div class="code-label">ตรรกะการตรวจสอบ</div>
+        <pre>
+# โหลดโมเดลที่ฝึกสำเร็จแล้วมาเปรียบเทียบกับข้อมูลปัจจุบัน
+predictions = model.predict(features_scaled)
+
+# คำนวณความแม่นยำ: ถ้าทายว่าเป็น 1 (ปกติ) มากกว่า 70% ให้ผ่าน
+accuracy = (list(predictions).count(1) / len(predictions)) * 100
+if accuracy > 70:
+    result = "ยินดีต้อนรับเจ้าของเครื่อง"</pre>
+    </div>
+
+    <div class="section">
+        <h2>5. การแสดงผลกราฟสมอง <span class="module-badge">Visualization</span></h2>
+        <h3>ไฟล์: <code>biokey_result_visualization.py</code></h3>
+        <p>สร้าง Grid เพื่อวาดพื้นที่ความปลอดภัย (Decision Boundary) ทำให้เห็นภาพชัดเจนว่า AI มองข้อมูลจุดไหนเป็นปกติ</p>
+
+        <div class="code-label">การสร้าง Decision Boundary พื้นผิว</div>
+        <pre>
+# สร้าง Meshgrid เพื่อคำนวณค่าจากโมเดลทั่วทั้งพื้นที่กราฟ
+Z = model.decision_function(np.c_[xx.ravel(), yy.ravel()])
+Z = Z.reshape(xx.shape)
+
+# วาดพื้นที่ (Contour) และจุดข้อมูล (Scatter)
+plt.contourf(xx, yy, Z, cmap=plt.cm.Paired, alpha=0.6)
+plt.scatter(features_scaled[:, 0], features_scaled[:, 1], c='white')</pre>
+    </div>
+
+</div>
+
+<footer>
+    <p>จัดทำเพื่อประกอบการอธิบายโครงสร้างโครงการ BioKey &copy; 2026</p>
+</footer>
+
+</body>
+</html>
